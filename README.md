@@ -1,1 +1,1 @@
-My C Folder For Project/Excercises
+My Folder For Project/Excercises
