@@ -2,4 +2,9 @@
 
 gcc main.c -o main.exe
 
-start ./main
+if "%~1" == "INTER" (
+    main.exe
+) else (
+    call start ./main.exe
+    @REM start ./main.exe
+)
