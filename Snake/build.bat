@@ -3,7 +3,7 @@
 gcc main.c -o main.exe
 
 if "%~1" == "INTER" (
-    main.exe
+    .\main.exe
 ) else (
-    call start ./main.exe
+    start "title" call .\main.exe
 )
