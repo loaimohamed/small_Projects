@@ -26,11 +26,22 @@ typedef struct {
     int y;
 } Point;
 
+typedef enum {
+    // TOP Down Left Right
+    // 72    80  75  77
+    D_UP = 72,
+    D_DOWN = 80,
+    D_LEFT = 75,
+    D_RIGHT = 77,
+    D_NONE = 0,
+} Direction;
+
 typedef struct {
     Point head;
-    Point prePoint;
     int length;
     Point *points;
+    /// Current Direction
+    int CR_Direction;
 } SnakeProp;
 
 void fill(int *list, SetCells sc) {
@@ -90,8 +101,8 @@ void resetList(int *list) {
 
 const Point InitialPoint = {.x = 10, .y = 10};
 
-Point movePoint(Point Og, Point Np) {
-    Point newPoint = {.x = Og.x + Np.x, .y = Og.y + Np.y};
+Point movePoint(const Point *Og, const Point *Np) {
+    Point newPoint = {.x = Og->x + Np->x, .y = Og->y + Np->y};
 
     if (newPoint.x > DIM - 1) {
         newPoint.x = 0;
@@ -135,12 +146,9 @@ Point *assignPoints() {
 }
 
 void snakeEntity(int *list, SnakeProp *se) {
-    // printf("%zu", se->length);
     Point temp = se->head;
     list[getPos(se->head)] = 2;
     for (size_t i = 0; i < se->length; i++) {
-        // printf("\nLook: %d/H(%d, %d):(%d, %d)", i, se->head.x, se->head.y,
-        //        se->points[i].x, se->points[i].y);
         Point item = se->points[i];
         list[getPos(item)] = 1;
         se->points[i] = temp;
@@ -150,10 +158,23 @@ void snakeEntity(int *list, SnakeProp *se) {
     // printf("\n----------------------------------------------\n");
 }
 
-const Point moveTop = {0, -1};
-const Point moveDown = {0, 1};
-const Point moveLeft = {-1, 0};
-const Point moveRight = {1, 0};
+const Point Movements[4] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+
+void reseting(int *list, int check) {
+    if (check) {
+        memset(list, 0, TCount * sizeof(int));
+        check = 0;
+    }
+}
+//this is working correctly but
+//TODO: try cecking if the next cell is zero if true then move if false then don't move
+int isOpposite(int current, int newDir) {
+    if (current == 0 && newDir == 1) return 1;
+    if (current == 1 && newDir == 0) return 1;
+    if (current == 2 && newDir == 3) return 1;
+    if (current == 3 && newDir == 2) return 1;
+    return 0;
+}
 
 int main() {
     // Debug, Random
@@ -162,7 +183,7 @@ int main() {
 
     Point *pts = assignPoints();
 
-    SnakeProp se = {InitialPoint, {}, DefaultSize, pts};
+    SnakeProp se = {InitialPoint, DefaultSize, pts, 0};
 
     snakeEntity(cells, &se);
 
@@ -177,30 +198,41 @@ int main() {
         // printf("Key: %d\n", key);
         // printf("\x1b[2J\x1b[H");
         clearScreen();
-        // TOP Down Left Right
-        // 72    80  75  77
-        int xswi = 0;
+        // x, y blocker
+        int xb = 0;
+        int yb = 0;
+        int canMove = 0;
+        int newDirection = 4;
+
         switch (key) {
-            case 72:
-                se.head = movePoint(se.head, moveTop);
+            case D_UP: // Top arrow
+                newDirection = 0;
                 break;
-            case 80:
-                se.head = movePoint(se.head, moveDown);
+            case D_DOWN: // Down arrow
+                newDirection = 1;
                 break;
-            case 75:
-                se.head = movePoint(se.head, moveLeft);
+            case D_LEFT: // Left arrow
+                newDirection = 2;
                 break;
-            case 77:
-                se.head = movePoint(se.head, moveRight);
+            case D_RIGHT: // Right arrow
+                newDirection = 3;
                 break;
         }
-        // resetList(cells);
-        memset(cells, 0, TCount * sizeof(int));
-        // usleep(100 * 1000);
-        // clearScreen();
-        snakeEntity(cells, &se);
-        display(cells, sc);
+        
+        
+        if (newDirection <= 3 && !isOpposite(se.CR_Direction, newDirection)) {
+            se.head = movePoint(&se.head, &Movements[newDirection]);
+            se.CR_Direction = newDirection;
+            clearScreen();
+            memset(cells, 0, TCount * sizeof(int));
+            snakeEntity(cells, &se);
+            display(cells, sc);
+        }
+        printf("C: %d\t N: %d", se.CR_Direction, newDirection);
+        // printf("\nLook: %d\t", newDirection);
+        // printf("MoveLock: {x:%d, y:%d}", xb, yb);
     }
+
     free(pts);
     return 0;
 }
