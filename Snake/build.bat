@@ -1,6 +1,6 @@
 @echo off
 
-gcc main.c -o main.exe
+gcc main.c -Wall -Wextra -o main.exe
 
 if "%~1" == "INTER" (
     .\main.exe
