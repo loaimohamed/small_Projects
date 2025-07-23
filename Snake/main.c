@@ -22,6 +22,7 @@ typedef struct {
     Point head;
     int length;
     Point Tail[3];
+    int currentDirec;
 } Snake;
 typedef enum { RED = 41, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE } TermColors;
 // Direction: TOP Down Left Right 72  80  75  77
@@ -45,7 +46,7 @@ void display(const Grid *grid) {
             printf("\n");
         }
 
-        if (Debug) {
+        if (!Debug) {
             printf("%d ", item);
         } else {
             switch (item) {
@@ -84,7 +85,7 @@ void ClearScreen() {
 void SetSnake(Snake *snake) {
     for (int i = 0; i < snake->length; i++) {
         snake->Tail[i] =
-            (Point){.x = snake->head.x + (i + 1), .y = snake->head.y};
+            (Point){.x = snake->head.x - (i + 1), .y = snake->head.y};
     }
 }
 
@@ -98,57 +99,86 @@ void snakeOnGrid(Grid *grid, const Snake *snake) {
 }
 
 void resetGrid(Grid *grid) {
-    for (int i = 0;i < grid->length;i++) {
+    for (int i = 0; i < grid->length; i++) {
         grid->list[i] = 0;
-    }  
+    }
 }
 
 void snakeMovement(Snake *snake, Point point) {
     Point temp = snake->head;
-    snake->head = (Point){
-            .x = snake->head.x + point.x, 
-            .y = snake->head.y + point.y
-        };
+
+    snake->head =
+        (Point){.x = (snake->head.x + point.x), .y = (snake->head.y + point.y)};
+
+    snake->head.x = (snake->head.x + DIM) % DIM;
+    snake->head.y = (snake->head.y + DIM) % DIM;
+
     for (int i = 0; i < snake->length; i++) {
         Point current = snake->Tail[i];
         snake->Tail[i] = temp;
         temp = current;
     }
-    // printf("\nList: (%d, %d), (%d, %d), (%d, %d)", 
+    // printf("\nList: (%d, %d), (%d, %d), (%d, %d)",
     // snake->Tail[0].x, snake->Tail[0].y,
     // snake->Tail[1].x, snake->Tail[1].y,
     // snake->Tail[2].x, snake->Tail[2].y);
     // printf("Head: (%d, %d)\n", snake->head.x, snake->head.y);
 }
 
+int isOpposite(int cDirec, int pDirec) {
+    // TOP AND DOWN
+    if (pDirec == 0 && cDirec == 1) return 1;
+    // DOWN AND TOP
+    if (pDirec == 1 && cDirec == 0) return 1;
+    // LEFT AND RIGHT
+    if (pDirec == 2 && cDirec == 3) return 1;
+    // //RIGHT AND LEFT
+    if (pDirec == 3 && cDirec == 2) return 1;
+    return 0;
+}
+
 void FrameUpdate(Grid *grid, Snake *snake) {
+    snake->currentDirec = 3;
     // printf("FrameUpdate");
     for (;;) {
-        int key = getch();
-        if (key == 0 || key == 224) key = getch();
-        if (key == 3) break;
+        // if (kbhit()) {
+            int key = getch();
+            if (key == 0 || key == 224) key = getch();
+            if (key == 3) break;
 
-        switch (key) {
-            case Direc_UP:
-                snakeMovement(snake, Direcs[0]);
-                break;
-            case Direc_Down:
-                snakeMovement(snake, Direcs[1]);
-                break;
-            case Direc_Left:
-                snakeMovement(snake, Direcs[2]);
-                break;
-            case Direc_Right:
-                snakeMovement(snake, Direcs[3]);
-                break;
-        }
+            // Current Direction
+            int newDirection = -1;
+            switch (key) {
+                case Direc_UP:
+                    newDirection = 0;
+                    break;
+                case Direc_Down:
+                    newDirection = 1;
+                    break;
+                case Direc_Left:
+                    newDirection = 2;
+                    break;
+                case Direc_Right:
+                    newDirection = 3;
+                    break;
+            }
+
+            // int x = isOpposite(cDirec, pDirec);
+            if (newDirection != -1 &&
+                !isOpposite(newDirection, snake->currentDirec)) {
+                snake->currentDirec = newDirection;
+            }
+        // }
+
+        snakeMovement(snake, Direcs[snake->currentDirec]);
+
         resetGrid(grid);
         snakeOnGrid(grid, snake);
         ClearScreen();
         display(grid);
+        // _sleep(50);
     }
-
-    // printf("\nList: (%d, %d), (%d, %d), (%d, %d)", 
+    // printf("\nList: (%d, %d), (%d, %d), (%d, %d)",
     //     snake->Tail[0].x, snake->Tail[0].y,
     //     snake->Tail[1].x, snake->Tail[1].y,
     //     snake->Tail[2].x, snake->Tail[2].y);
@@ -156,8 +186,8 @@ void FrameUpdate(Grid *grid, Snake *snake) {
 }
 
 int main() {
-    int snakeLength = 3;
-    // Debug = 0;
+    int snakeLength = 5;
+    Debug = 1;
     Grid grid = {.length = DIM * DIM, .appleLocation = 25};
     grid.list = (int[DIM * DIM]){};
 
@@ -165,6 +195,7 @@ int main() {
         .head = {.x = DIM / 2, .y = DIM / 2},
         .length = snakeLength,
         .Tail = {},
+        .currentDirec = 3,
     };
 
     SetSnake(&snake);
