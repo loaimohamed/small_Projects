@@ -102,6 +102,7 @@ void resetGrid(Grid *grid) {
     for (int i = 0; i < grid->length; i++) {
         grid->list[i] = 0;
     }
+    // grid->list[grid->appleLocation] = 3;
 }
 
 void snakeMovement(Snake *snake, Point point) {
@@ -136,7 +137,6 @@ int isOpposite(int cDirec, int pDirec) {
     if (pDirec == 3 && cDirec == 2) return 1;
     return 0;
 }
-
 void FrameUpdate(Grid *grid, Snake *snake) {
     snake->currentDirec = 3;
     // printf("FrameUpdate");
@@ -187,7 +187,7 @@ void FrameUpdate(Grid *grid, Snake *snake) {
 
 int main() {
     int snakeLength = 5;
-    Debug = 1;
+    Debug = 0;
     Grid grid = {.length = DIM * DIM, .appleLocation = 25};
     grid.list = (int[DIM * DIM]){};
 

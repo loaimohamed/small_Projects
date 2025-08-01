@@ -1,10 +1,10 @@
-My Folder For Project/Excercises
+\#My Folder For Project/Excercises
 
 
 
-\## Simple Game of Life in Console ##
+\##Simple Game of Life in Console
 
 
 
-\##Snake Game in Console ##
+\##Snake Game in Console
 
