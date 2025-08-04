@@ -4,7 +4,9 @@
 
 #define DIM 20
 #define TOTALEN DIM *DIM
+#define SnakeSize 5
 #define SetColor(esc, color) printf("%c[%dm  %c[0m", esc, color, esc);
+
 
 static int Debug = 1;
 
@@ -21,7 +23,7 @@ typedef struct {
 typedef struct {
     Point head;
     int length;
-    Point Tail[3];
+    Point Tail[SnakeSize];
     int currentDirec;
 } Snake;
 typedef enum { RED = 41, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE } TermColors;
@@ -105,25 +107,20 @@ void resetGrid(Grid *grid) {
     // grid->list[grid->appleLocation] = 3;
 }
 
-void snakeMovement(Snake *snake, Point point) {
+void snakeMovement(Snake *snake, const Point point) {
     Point temp = snake->head;
-
+    
     snake->head =
-        (Point){.x = (snake->head.x + point.x), .y = (snake->head.y + point.y)};
-
+    (Point){.x = (snake->head.x + point.x), .y = (snake->head.y + point.y)};
+    
     snake->head.x = (snake->head.x + DIM) % DIM;
     snake->head.y = (snake->head.y + DIM) % DIM;
-
+    
     for (int i = 0; i < snake->length; i++) {
         Point current = snake->Tail[i];
         snake->Tail[i] = temp;
         temp = current;
     }
-    // printf("\nList: (%d, %d), (%d, %d), (%d, %d)",
-    // snake->Tail[0].x, snake->Tail[0].y,
-    // snake->Tail[1].x, snake->Tail[1].y,
-    // snake->Tail[2].x, snake->Tail[2].y);
-    // printf("Head: (%d, %d)\n", snake->head.x, snake->head.y);
 }
 
 int isOpposite(int cDirec, int pDirec) {
@@ -135,10 +132,12 @@ int isOpposite(int cDirec, int pDirec) {
     if (pDirec == 2 && cDirec == 3) return 1;
     // //RIGHT AND LEFT
     if (pDirec == 3 && cDirec == 2) return 1;
+    //printf("==>>%d, %d\n", cDirec, pDirec);
     return 0;
 }
+
 void FrameUpdate(Grid *grid, Snake *snake) {
-    snake->currentDirec = 3;
+    // snake->currentDirec = 3;
     // printf("FrameUpdate");
     for (;;) {
         // if (kbhit()) {
@@ -162,15 +161,14 @@ void FrameUpdate(Grid *grid, Snake *snake) {
                     newDirection = 3;
                     break;
             }
-
-            // int x = isOpposite(cDirec, pDirec);
-            if (newDirection != -1 &&
-                !isOpposite(newDirection, snake->currentDirec)) {
-                snake->currentDirec = newDirection;
+            // printf("=> %d", snake->currentDirec);
+            if (newDirection != -1 && !isOpposite(newDirection, snake->currentDirec)) {
+                    snake->currentDirec = newDirection;
+                    snakeMovement(snake, Direcs[snake->currentDirec]);
             }
+            // printf("2==>>%d, %d\n", newDirection, snake->currentDirec);
         // }
 
-        snakeMovement(snake, Direcs[snake->currentDirec]);
 
         resetGrid(grid);
         snakeOnGrid(grid, snake);
@@ -186,8 +184,9 @@ void FrameUpdate(Grid *grid, Snake *snake) {
 }
 
 int main() {
-    int snakeLength = 5;
-    Debug = 0;
+    //snake Length must much the snake Tail size if not might not be working Correctly
+    int snakeLength = SnakeSize;
+    // Debug = 0;
     Grid grid = {.length = DIM * DIM, .appleLocation = 25};
     grid.list = (int[DIM * DIM]){};
 
