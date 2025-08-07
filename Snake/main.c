@@ -1,6 +1,7 @@
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "main.h"
 
 #define DIM 20
 #define TOTALEN DIM *DIM
@@ -171,17 +172,17 @@ void FrameUpdate(Grid *grid, Snake *snake) {
             
             Point newPosition = addPoint(snake->head, Direcs[snake->currentDirec]);
 
-            if (grid->list[pfps(newPosition)] == 3) {
-                snake->length += 1;
-                grid->appleLocation += 2;
-            }
-
             // printf("=> %d", snake->currentDirec);
             if (newDirection != -1 && !isOpposite(newDirection, snake->currentDirec)) {
                     snake->currentDirec = newDirection;
                     snakeMovement(snake, Direcs[snake->currentDirec]);
             }
-            // printf("2==>>%d, %d\n", newDirection, snake->currentDirec);
+
+            if (grid->list[pfps(newPosition)] == 3) {
+                snake->length += 1;
+                grid->appleLocation += 2;
+            }
+
         // }
 
 
