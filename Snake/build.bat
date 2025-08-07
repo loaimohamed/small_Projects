@@ -2,6 +2,8 @@
 
 gcc main.c -Wall -Wextra -o main.exe
 
+@cls
+
 if "%~1" == "INTER" (
     .\main.exe
 ) else (
