@@ -1,13 +1,11 @@
 #include <conio.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "main.h"
 
 #define DIM 20
 #define TOTALEN DIM *DIM
 #define SnakeSize 5
 #define SetColor(esc, color) printf("%c[%dm  %c[0m", esc, color, esc);
-
 
 static int Debug = 1;
 
@@ -73,17 +71,24 @@ void display(const Grid *grid) {
     }
     printf("\n");
 }
-/// @brief Transform x and y coordinates into 1D list {x + y * size} from Two Params
+/// @brief Transform x and y coordinates into 1D list {x + y * size} from Two
+/// Params
 int findPos(int a, int b) {
     return a + b * DIM;
 }
-/// @brief Transform x and y coordinates into 1D list {x + y * size} from Point Struct
+/// @brief Transform x and y coordinates into 1D list {x + y * size} from Point
+/// Struct
 int pfps(Point point) {
     return findPos(point.x, point.y);
 }
 /// @brief Return the sum of two Points
 Point addPoint(Point I, Point II) {
     return (Point){.x = I.x + II.x, .y = I.y + II.y};
+}
+/// @brief Return Random Number Between @param min Minimum @param max Maximum
+int RNG_Between(int min, int max) {
+    int number = (rand() % (max - min + 1)) + min;
+    return number;
 }
 /// @brief simple clear screen
 void ClearScreen() {
@@ -118,17 +123,17 @@ void snakeMovement(Snake *snake, const Point point) {
     Point temp = snake->head;
 
     snake->head = addPoint(snake->head, point);
-    
+
     snake->head.x = (snake->head.x + DIM) % DIM;
     snake->head.y = (snake->head.y + DIM) % DIM;
-    
+
     for (int i = 0; i < snake->length; i++) {
         Point current = snake->Tail[i];
         snake->Tail[i] = temp;
         temp = current;
     }
 }
-/// @brief Check the direction of snake return 1 if the direction is Equal 
+/// @brief Check the direction of snake return 1 if the direction is Equal
 /// @param cDirec Current Direction
 /// @param pDirec Previous Direction
 int isOpposite(int cDirec, int pDirec) {
@@ -140,7 +145,7 @@ int isOpposite(int cDirec, int pDirec) {
     if (pDirec == 2 && cDirec == 3) return 1;
     // //RIGHT AND LEFT
     if (pDirec == 3 && cDirec == 2) return 1;
-    //printf("==>>%d, %d\n", cDirec, pDirec);
+    // printf("==>>%d, %d\n", cDirec, pDirec);
     return 0;
 }
 /// @brief Handle Frames and Movement using Arrow Keys
@@ -148,7 +153,7 @@ void FrameUpdate(Grid *grid, Snake *snake) {
     // snake->currentDirec = 3;
     // printf("FrameUpdate");
     for (;;) {
-        // if (kbhit()) {
+        if (kbhit()) {
             int key = getch();
             if (key == 0 || key == 224) key = getch();
             if (key == 3) break;
@@ -169,22 +174,22 @@ void FrameUpdate(Grid *grid, Snake *snake) {
                     newDirection = 3;
                     break;
             }
-            
-            Point newPosition = addPoint(snake->head, Direcs[snake->currentDirec]);
+
+            Point newPosition =
+                addPoint(snake->head, Direcs[snake->currentDirec]);
 
             // printf("=> %d", snake->currentDirec);
-            if (newDirection != -1 && !isOpposite(newDirection, snake->currentDirec)) {
-                    snake->currentDirec = newDirection;
-                    snakeMovement(snake, Direcs[snake->currentDirec]);
+            if (newDirection != -1 &&
+                !isOpposite(newDirection, snake->currentDirec)) {
+                snake->currentDirec = newDirection;
+                snakeMovement(snake, Direcs[snake->currentDirec]);
             }
 
             if (grid->list[pfps(newPosition)] == 3) {
                 snake->length += 1;
-                grid->appleLocation += 2;
+                grid->appleLocation = RNG_Between(1, TOTALEN);
             }
-
-        // }
-
+        }
 
         resetGrid(grid);
         snakeOnGrid(grid, snake);
@@ -200,9 +205,10 @@ void FrameUpdate(Grid *grid, Snake *snake) {
 }
 
 int main() {
-    //snake Length must much the snake Tail size if not might not be working Correctly
+    // snake Length must much the snake Tail size if not might not be working
+    // Correctly
     int snakeLength = 3;
-    // Debug = 0;
+    Debug = 0;
     Grid grid = {.length = DIM * DIM, .appleLocation = 25};
     grid.list = (int[DIM * DIM]){};
 
@@ -212,8 +218,6 @@ int main() {
         .Tail = {},
         .currentDirec = 3,
     };
-
-
 
     setSnakeTail(&snake);
 
