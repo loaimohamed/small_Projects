@@ -2,15 +2,14 @@
 
 | Project Name | Status | Languages |                   
 | :----------- | :-------------: | :------:|
-| Simple Game of Life (Console Based) | DONE | C |
-| Snake Game (Console Based) |About **80%**| C |
-| Tetris (Console Based) | 0% | C |
-| XOR128 | DONE | Zig |
-| My Own Markdown | 0% | … |
-<tr>
-  <td>Added Cell 1</td>
-  <td>Added Cell 2</td>
-</tr>
+| **Console Based**      |||
+| Simple Game of Life 	 | DONE | C |
+| Snake Game	      	 |About **80%**| C |
+| Tetris 		 | 0% | C |
+| **OTHERS**		 |||
+| XOR128                 | DONE | Zig |
+| My Own Markdown        | 0% | … |
+
 
 
 /*
