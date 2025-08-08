@@ -7,9 +7,6 @@
 | Tetris (Console Based) | 0% | C |
 | XOR128 | DONE | Zig |
 | My Own Markdown | 0% | … |
-| Header 1 | Header 2 |
-|----------|----------|
-| Cell 1   | Cell 2   |
 <tr>
   <td>Added Cell 1</td>
   <td>Added Cell 2</td>
