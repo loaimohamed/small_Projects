@@ -1,10 +1,12 @@
-# My Folder For Project/Excercises
+# My Folder For Project/Exercises
 
 | Project Name | Status | Languages |                   
 | :----------- | :-------------: | :------:|
-Simple Game of Life in Console | DONE | C |
-Snake Game in Console |**Still In Progress**| C |
-XOR128 | DONE | Zig |
+| Simple Game of Life (Console Based) | DONE | C |
+| Snake Game (Console Based) |About **80%**| C |
+| Tetris (Console Based) | 0% | C |
+| XOR128 | DONE | Zig |
+| My Own Markdown | 0% | … |
 
 
 /*
