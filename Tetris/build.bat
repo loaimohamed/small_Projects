@@ -1,8 +1,8 @@
 @echo off
 
-gcc main.c -Wall -Wextra -o main.exe
+@cls
 
-@REM @cls
+gcc main.c -Wall -Wextra -Wno-unused-variable -o main.exe
 
 if "%~1" == "INTER" (
     .\main.exe
