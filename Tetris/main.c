@@ -150,7 +150,7 @@ void shapeRotate(Shape_Struct *ss) {
         }
         // printf("(%d)>(%.1f, %.1f)(%.1f) = %d\n",i, np.x, np.y,(double)hc, alt_pos);
         // printf("%d>%d\n",i, alt_pos);
-        // printf("\n");
+        printf("\n");
         Shapes[ss->id][(int)alt_pos] = tempShape[grid_pos];
     }
 }
