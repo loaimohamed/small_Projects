@@ -1,14 +1,15 @@
 # My Folder For Project/Exercises
 
-| Project Name | Status | Languages |                   
-| :----------- | :-------------: | :------:|
+| Project Name | Status           | Languages |                   
+| :----------- | :-------------:  | :------:  |
 | **Console Based**      |||
-| Simple Game of Life 	 | DONE | C |
-| Snake Game	      	 |About **80%**| C |
-| Tetris 		 | 0% | C |
+| Simple Game of Life 	 | DONE   | C         |
+| Snake Game	      	 |About **80%**| C    |
+| Tetris 		 | 6%     | C |
 | **OTHERS**		 |||
-| XOR128                 | DONE | Zig |
-| My Own Markdown        | 0% | … |
+| XOR128                 | DONE   | Zig       |
+| Bits, Bytes Manipu…    | TODO   | …         |
+| My Own Markdown        | TODO   | …         |
 
 
 

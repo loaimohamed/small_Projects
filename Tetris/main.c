@@ -139,6 +139,12 @@ void shapeRotate(Shape_Struct *ss) {
         int alt_pos = getCord(np.x, np.y, hc);
 
         // printf("%d, %d\n", alt_pos, ShapeTest[alt_pos]);
+        // printf("(%d):(%.2f, %.2f) + (%.2f, %.2f) = (%.2f, %.2f) | (%.2f, %.2f)\n", i,
+        //     rotated.x, rotated.y,
+        //     pivot.x, pivot.y,
+        //     np.x, np.y,
+        //        rotated.x + pivot.x,  rotated.y + pivot.y
+        // );
         // printf("%2.f, %2.f\n", rotated.x+pivot.x, rotated.y+pivot.y);
         if (i == 4 || i == 8 || i == 9 || i == 12) {
             // printf("<=");
@@ -150,7 +156,7 @@ void shapeRotate(Shape_Struct *ss) {
         }
         // printf("(%d)>(%.1f, %.1f)(%.1f) = %d\n",i, np.x, np.y,(double)hc, alt_pos);
         // printf("%d>%d\n",i, alt_pos);
-        printf("\n");
+        // printf("\n");
         Shapes[ss->id][(int)alt_pos] = tempShape[grid_pos];
     }
 }
@@ -187,7 +193,6 @@ void FrameUpdate(Grid *grid, Shape_Struct *ss) {
 
         switch (key) {
             case Direc_UP:
-                // ss->angle = 90; 
                 shapeRotate(ss);
                 break;
             case Direc_Down:
@@ -218,13 +223,13 @@ void FrameUpdate(Grid *grid, Shape_Struct *ss) {
 int main() {
     Grid grid = {.length = DIM * DIM, .spawnPoint = 60};
     grid.list = (int[DIM * DIM]){};
-    // Debug = 1;
+    Debug = 1;
     // int i = 2;
 
     Point center = {3.5, 3.5};
 
     Shape_Struct ss = {
-        .basePoint = {2, 2}, .angle = 90, .pivot = center, .id = T_Shape};
+        .basePoint = {2, 2}, .angle = 270, .pivot = center, .id = T_Shape};
 
     FrameUpdate(&grid, &ss);
 
