@@ -1,0 +1,23 @@
+# Function to check if multiple WSL distros exist and get current distro name
+get_wsl_distro_prompt() {
+    # Get list of WSL distros (skip header line)
+    local wsl_distros
+    wsl_distros=$(wsl.exe --list --quiet 2>/dev/null | grep -v -e '^[[:space:]]*$')
+
+    # Count number of installed distros
+    local distro_count
+    distro_count=$(echo "$wsl_distros" | wc -l)
+
+    # Only show distro name if multiple exist
+    if [ "$distro_count" -gt 1 ]; then
+        # Get current distro name (from /etc/os-release or $WSL_DISTRO_NAME)
+        local current_distro
+        current_distro=${WSL_DISTRO_NAME:-$(grep -oP 'PRETTY_NAME="\K[^"]+' /etc/os-release | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g')}
+
+        # Format as [Distro_Name]
+        echo "[${current_distro}] "
+    fi
+}
+
+# Update PS1 to include WSL distro (if needed)
+PS1='$(get_wsl_distro_prompt)\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\$ '
